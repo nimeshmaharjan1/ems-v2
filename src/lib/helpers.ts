@@ -35,9 +35,17 @@ export const getSlashDate = (date: Date) => {
   return DateTime.fromJSDate(newDate).toLocaleString(DateTime.DATE_SHORT);
 };
 
-export const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-IN").format(price);
-};
+export function formatPrice(
+  price: number | string,
+  currency: "USD" | "EUR" | "GBP" | "BDT" | "NPR",
+  notation: "compact" | "engineering" | "scientific" | "standard" = "standard",
+) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency,
+    notation,
+  }).format(Number(price));
+}
 
 export const downloadFile = (base64String: string, fileName: string) => {
   // Convert base64 string to Uint8Array

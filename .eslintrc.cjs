@@ -4,11 +4,12 @@ const config = {
   parserOptions: {
     project: true,
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "tailwindcss"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
+    "prettier",
+    "plugin:tailwindcss/recommended",
   ],
   rules: {
     // These opinionated rules are enabled in stylistic-type-checked above.
@@ -24,13 +25,22 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-    "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-misused-promises": [
-      "error",
+      2,
       {
         checksVoidReturn: { attributes: false },
       },
     ],
+  },
+  settings: {
+    tailwindcss: {
+      callees: ["cn", "cva"],
+      config: "./tailwind.config.ts",
+      classRegex: "^(class(Name)?|tw)$",
+    },
+    next: {
+      rootDir: ["./"],
+    },
   },
 };
 
