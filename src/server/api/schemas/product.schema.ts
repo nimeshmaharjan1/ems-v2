@@ -3,15 +3,24 @@ import { z, type TypeOf } from "zod";
 
 export const productSchema = z.object({
   model: z.string().optional(),
-  images: z.array(z.string()).optional(),
+  images: z
+    .unknown()
+    // .refine((val) => {
+    //   if (!Array.isArray(val)) return false;
+    //   if (val.some((file) => !(file instanceof File))) return false;
+    //   return true;
+    // }, "Must be an array of File")
+    .optional()
+    .nullable()
+    .default(null),
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(),
   price: z
     .number({
       required_error: "Price is required",
     })
     .positive("Price must be greater than 0"),
-  crossingPrice: z
+  crossedPrice: z
     .number()
     .positive("Crossing price must be greater than 0")
     .optional(),

@@ -13,7 +13,9 @@ export interface NavItem {
   label?: string;
   description?: string;
 }
-
+export type FileWithPreview = FileWithPath & {
+  preview: string;
+};
 export interface NavItemWithChildren extends NavItem {
   items: NavItemWithChildren[];
 }

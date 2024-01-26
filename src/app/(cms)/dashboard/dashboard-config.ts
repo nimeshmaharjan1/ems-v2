@@ -1,4 +1,4 @@
-import { SidebarNavItem } from "@/lib/types";
+import { type SidebarNavItem } from "@/lib/types";
 
 export interface DashboardConfig {
   CMSSidebar: SidebarNavItem[];
@@ -14,7 +14,7 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       title: "Products",
-      href: "/stores",
+      href: "/products",
       icon: "Box",
       items: [],
     },

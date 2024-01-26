@@ -14,6 +14,7 @@ import {
 } from "../services/product.services";
 
 export const productCreateController = async (input: T_ProductCreateSchema) => {
+  console.log("hereeeeeeeeeeeeeee");
   try {
     const product = await productCreateService(input);
     return {
@@ -22,6 +23,7 @@ export const productCreateController = async (input: T_ProductCreateSchema) => {
       message: "Product has been created",
     };
   } catch (err: unknown) {
+    console.log("product create controller error: ", err);
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
         throw new TRPCError({

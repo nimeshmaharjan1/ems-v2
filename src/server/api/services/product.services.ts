@@ -6,20 +6,42 @@ import {
 } from "../schemas/product.schema";
 
 export const productCreateService = async (data: T_ProductCreateSchema) => {
+  console.log("product create service");
+  const images = data?.images?.map((image) => JSON.stringify(image));
   const product = await db.product.create({
-    data,
+    data: {
+      ...data,
+      images: images, // Store images as a JSON string
+    },
   });
   return product;
 };
 
 export const productUpdateService = async (data: T_ProductUpdateSchema) => {
+  const images = data.body?.images?.map((image) => JSON.stringify(image));
   const product = await db.product.update({
     where: {
       id: data.productRequestParams.productId,
     },
-    data: data.body,
+    data: {
+      ...data.body,
+      images: images,
+    },
   });
   return product;
+};
+
+type ImageObject = {
+  id: string;
+  name: string;
+  url: string;
+};
+
+// Function to parse images from string to array of objects
+const parseImages = (imagesStringArray: string[]): ImageObject[] => {
+  return imagesStringArray.map(
+    (imagesString) => JSON.parse(imagesString) as ImageObject,
+  );
 };
 
 export const productFindUniqueService = async (productId: string) => {
@@ -28,6 +50,11 @@ export const productFindUniqueService = async (productId: string) => {
       id: productId,
     },
   });
+  if (product) {
+    // Parse images if product exists
+    product.images = parseImages(product.images) as unknown as string[];
+  }
+
   return product;
 };
 export const productFindAllService = async (
@@ -44,6 +71,10 @@ export const productFindAllService = async (
       category: true,
     },
   });
+  products.forEach((product) => {
+    product.images = parseImages(product.images) as unknown as string[];
+  });
+
   return {
     products,
     totalPages,

@@ -18,7 +18,7 @@ const CMSHeader = () => {
       <div className="container flex h-16 items-center justify-between py-4">
         {/* <MainNav items={dashboardConfig.mainNav} /> */}
         <p className="flex items-center text-lg font-bold">
-          <Flower className="mr-2 h-5 w-5"></Flower>
+          <Flower className="mr-2 size-5"></Flower>
           Eeshan Mahadev Enterprises
         </p>
         <DropdownMenu>
@@ -29,7 +29,7 @@ const CMSHeader = () => {
         /> */}
             <UserAvatar
               // user={{ name: user.name || null, image: user.image || null }}
-              className="h-8 w-8 cursor-pointer"
+              className="size-8 cursor-pointer"
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -49,7 +49,7 @@ const CMSHeader = () => {
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/admin/dashboard">Dashboard</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/billing">Billing</Link>
