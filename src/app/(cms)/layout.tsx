@@ -1,6 +1,6 @@
 import CMSHeader from "./_components/cms-header";
 import { CMSSidebar } from "./_components/cms-sidebar";
-import { dashboardConfig } from "./dashboard/dashboard";
+import { dashboardConfig } from "./admin/dashboard/dashboard";
 
 export default async function DashboardLayout({
   children,

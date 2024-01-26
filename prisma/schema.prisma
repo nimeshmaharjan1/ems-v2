@@ -177,12 +177,12 @@ model Product {
   id                   String          @id @default(cuid())
   images               String[]
   title                String
-  description          String
+  description          String?
   price                Float
   sellingPrice         Float?
   crossedPrice         Float?
   hasOffer             Boolean?        @default(false)
-  modal                String
+  model                String?
   wholesaleCreditPrice Float?
   wholesaleCashPrice   Float?
   status               PRODUCT_STATUS? @default(ACTIVE)
@@ -190,10 +190,10 @@ model Product {
   categoryId           String
   company              Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId            String
-  quantity             String
+  quantity             Int
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
-  slug                 String
+  slug                 String?
   orderItems           OrderItem[]
   reviews              Review[]
 }
