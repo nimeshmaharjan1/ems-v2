@@ -23,7 +23,7 @@ export const productCreateController = async (input: T_ProductCreateSchema) => {
       message: "Product has been created",
     };
   } catch (err: unknown) {
-    console.log("product create controller error: ", err);
+    console.error("product create controller error: ", err);
     if (err instanceof PrismaClientKnownRequestError) {
       if (err.code === "P2002") {
         throw new TRPCError({
@@ -93,11 +93,8 @@ export const productFindAllController = async (
   filterQuery: T_ProductFilterQuery,
 ) => {
   try {
-    const { limit, page, products, totalPages, totalRecords } =
-      await productFindAllService({
-        limit: filterQuery.limit,
-        page: filterQuery.page,
-      });
+    const { per_page, page, products, totalPages, totalRecords } =
+      await productFindAllService(filterQuery);
     return {
       message: "Products have been fetched",
       statusCode: 200,
@@ -107,7 +104,7 @@ export const productFindAllController = async (
       pagination: {
         totalPages,
         totalRecords,
-        limit,
+        per_page,
         page,
       },
     };

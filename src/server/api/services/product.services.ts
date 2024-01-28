@@ -6,7 +6,6 @@ import {
 } from "../schemas/product.schema";
 
 export const productCreateService = async (data: T_ProductCreateSchema) => {
-  console.log("product create service");
   const images = data?.images?.map((image) => JSON.stringify(image));
   const product = await db.product.create({
     data: {
@@ -49,6 +48,12 @@ export const productFindUniqueService = async (productId: string) => {
     where: {
       id: productId,
     },
+    include: {
+      category: true,
+      company: true,
+      orderItems: true,
+      reviews: true,
+    },
   });
   if (product) {
     // Parse images if product exists
@@ -60,16 +65,40 @@ export const productFindUniqueService = async (productId: string) => {
 export const productFindAllService = async (
   filterQuery: T_ProductFilterQuery,
 ) => {
-  const take = filterQuery.limit || 10;
-  const skip = (filterQuery.page - 1) * filterQuery.limit;
-  const totalRecords = (await db.product.count()) ?? 0;
-  const totalPages = Math.ceil(totalRecords / filterQuery.limit);
+  let whereCondition = {};
+  if (filterQuery.title) {
+    whereCondition = {
+      OR: [
+        { title: { contains: filterQuery.title, mode: "insensitive" } },
+        // Add more search criteria if needed
+      ],
+    };
+  }
+  const take = filterQuery.per_page || 10;
+  const skip = (filterQuery.page - 1) * filterQuery.per_page;
+  const totalRecords =
+    (await db.product.count({
+      where: whereCondition,
+    })) ?? 0;
+  const totalPages = Math.ceil(totalRecords / filterQuery.per_page);
+
+  const orderBy: { [key: string]: "asc" | "desc" } = {}; // Define the type of orderBy object
+
+  // Check if filterQuery.column and filterQuery.order are provided
+  if (filterQuery.column && filterQuery.order) {
+    orderBy[filterQuery.column] = filterQuery.order; // Set orderBy dynamically
+  }
   const products = await db.product.findMany({
     skip,
     take,
     include: {
       category: true,
+      company: true,
+      orderItems: true,
+      reviews: true,
     },
+    where: whereCondition,
+    orderBy,
   });
   products.forEach((product) => {
     product.images = parseImages(product.images) as unknown as string[];
@@ -79,7 +108,7 @@ export const productFindAllService = async (
     products,
     totalPages,
     totalRecords,
-    limit: filterQuery.limit,
+    per_page: filterQuery.per_page,
     page: filterQuery.page,
   };
 };

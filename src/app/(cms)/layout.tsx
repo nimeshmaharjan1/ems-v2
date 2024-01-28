@@ -7,7 +7,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
     <div className="flex min-h-screen flex-col space-y-6">
       <CMSHeader />
       <div className="container grid flex-1 gap-12 pb-8 md:grid-cols-[200px_1fr]">
-        <aside className="hidden w-[200px] flex-col md:flex">
+        <aside className="hidden w-[200px] flex-col lg:flex">
           <CMSSidebar items={dashboardConfig.CMSSidebar} />
         </aside>
         <main className="flex w-full flex-1 flex-col overflow-hidden">

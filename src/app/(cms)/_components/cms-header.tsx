@@ -8,6 +8,8 @@ import {
 import { UserAvatar } from "@/components/user-avatar";
 import { Flower } from "lucide-react";
 import Link from "next/link";
+import { dashboardConfig } from "../dashboard/dashboard-config";
+import CMSLayoutSidebarSm from "./cms-sm-nav";
 
 const CMSHeader = () => {
   // const initials = `${user?.firstName?.charAt(0) ?? ""} ${
@@ -17,10 +19,18 @@ const CMSHeader = () => {
     <header className="sticky top-0 z-40 border-b bg-background">
       <div className="container flex h-16 items-center justify-between py-4">
         {/* <MainNav items={dashboardConfig.mainNav} /> */}
-        <p className="flex items-center text-lg font-bold">
-          <Flower className="mr-2 size-5"></Flower>
-          Eeshan Mahadev Enterprises
-        </p>
+        <div className="hidden lg:block">
+          <p className="flex items-center text-lg font-bold">
+            <Flower className="mr-2 size-6"></Flower>
+            Eeshan Mahadev Enterprises
+          </p>
+        </div>
+        <div className="block lg:hidden">
+          <CMSLayoutSidebarSm
+            items={dashboardConfig.CMSSidebar}
+          ></CMSLayoutSidebarSm>
+        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {/* <UserAvatar

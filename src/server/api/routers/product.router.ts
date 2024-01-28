@@ -1,8 +1,13 @@
 import {
   productCreateController,
   productFindAllController,
+  productFindUniqueController,
 } from "../controllers/product.controller";
-import { productFilterQuery, productSchema } from "../schemas/product.schema";
+import {
+  productFilterQuery,
+  productRequestParams,
+  productSchema,
+} from "../schemas/product.schema";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const productRouter = createTRPCRouter({
@@ -12,4 +17,7 @@ export const productRouter = createTRPCRouter({
   productFindAllRoute: publicProcedure
     .input(productFilterQuery)
     .query(({ input }) => productFindAllController(input)),
+  productFindUniqueRoute: publicProcedure
+    .input(productRequestParams)
+    .query(({ input }) => productFindUniqueController(input)),
 });

@@ -42,11 +42,6 @@ import { toast } from "sonner";
 const CreateProductForm = () => {
   const { useUploadThing } = generateReactHelpers<OurFileRouter>();
   const categories = api.category.categoryFindAllRoute.useQuery();
-  const products = api.product.productFindAllRoute.useQuery({
-    limit: 10,
-    page: 1,
-  });
-  console.log(products.data);
 
   const createProduct = api.product.productCreateRoute.useMutation();
 

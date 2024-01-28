@@ -4,7 +4,7 @@ import { z, type TypeOf } from "zod";
 export const productSchema = z.object({
   model: z.string().optional(),
   images: z
-    .unknown()
+    .array(z.string())
     // .refine((val) => {
     //   if (!Array.isArray(val)) return false;
     //   if (val.some((file) => !(file instanceof File))) return false;
@@ -55,8 +55,11 @@ export const updateProductSchema = z.object({
 });
 
 export const productFilterQuery = z.object({
-  limit: z.number().default(10),
+  per_page: z.number().default(10),
   page: z.number().default(1),
+  title: z.string().optional(),
+  column: z.string().optional(),
+  order: z.enum(["asc", "desc"]).optional(), //
 });
 
 export type T_ProductCreateSchema = TypeOf<typeof productSchema>;
