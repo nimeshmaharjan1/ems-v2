@@ -2,8 +2,8 @@ import "@/styles/globals.css";
 
 import { Inter as FontSans } from "next/font/google";
 
+import SonnerProvider from "@/components/sonner-provider";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -39,7 +39,7 @@ export default function RootLayout({
         >
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </ThemeProvider>
-        <Toaster></Toaster>
+        <SonnerProvider></SonnerProvider>
       </body>
     </html>
   );

@@ -70,15 +70,6 @@ const CMSProductsPage: React.FC<ProductsPageProps> = ({ searchParams }) => {
     },
   );
 
-  if (productsPromise.isLoading || !productsPromise.data)
-    return (
-      <DataTableSkeleton
-        columnCount={6}
-        isNewRowCreatable={true}
-        isRowsDeletable={true}
-      />
-    );
-
   return (
     <DashboardShell>
       <div className="flex items-center justify-between">
@@ -103,10 +94,18 @@ const CMSProductsPage: React.FC<ProductsPageProps> = ({ searchParams }) => {
           />
         }
       >
-        <ProductsTableShell
-          data={productsPromise.data?.data.products}
-          pageCount={productsPromise.data?.pagination.totalPages}
-        />
+        {productsPromise.isLoading || !productsPromise.data ? (
+          <DataTableSkeleton
+            columnCount={6}
+            isNewRowCreatable={true}
+            isRowsDeletable={true}
+          />
+        ) : (
+          <ProductsTableShell
+            data={productsPromise.data?.data.products}
+            pageCount={productsPromise.data?.pagination.totalPages}
+          />
+        )}
       </Suspense>
     </DashboardShell>
   );

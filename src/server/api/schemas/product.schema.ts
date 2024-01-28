@@ -4,7 +4,7 @@ import { z, type TypeOf } from "zod";
 export const productSchema = z.object({
   model: z.string().optional(),
   images: z
-    .array(z.string())
+    .unknown()
     // .refine((val) => {
     //   if (!Array.isArray(val)) return false;
     //   if (val.some((file) => !(file instanceof File))) return false;

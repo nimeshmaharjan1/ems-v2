@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: React.PropsWithChildren) {
         <aside className="hidden w-[200px] flex-col lg:flex">
           <CMSSidebar items={dashboardConfig.CMSSidebar} />
         </aside>
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
+        <main className="flex w-full flex-1 flex-col overflow-hidden px-2">
           {children}
         </main>
       </div>

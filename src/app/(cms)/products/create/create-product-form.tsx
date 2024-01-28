@@ -35,7 +35,7 @@ import { PRODUCT_STATUS } from "@prisma/client";
 import { generateReactHelpers } from "@uploadthing/react/hooks";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -43,7 +43,16 @@ const CreateProductForm = () => {
   const { useUploadThing } = generateReactHelpers<OurFileRouter>();
   const categories = api.category.categoryFindAllRoute.useQuery();
 
-  const createProduct = api.product.productCreateRoute.useMutation();
+  const createProduct = api.product.productCreateRoute.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      form.reset();
+      setFiles(null);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const form = useForm<T_ProductCreateSchema>({
     resolver: zodResolver(productSchema),
@@ -66,47 +75,45 @@ const CreateProductForm = () => {
   });
 
   const { isUploading, startUpload } = useUploadThing("productImage");
-  const [isPending, startTransition] = useTransition();
   const [files, setFiles] = useState<FileWithPreview[] | null>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
   const onSubmit: SubmitHandler<T_ProductCreateSchema> = (data) => {
-    startTransition(async () => {
-      try {
-        if (isArrayOfFile(data.images)) {
-          toast.promise(
-            startUpload(data.images)
-              .then((res) => {
-                const formattedImages = res?.map((image) => ({
-                  id: image.key,
-                  name: image.key.split("_")[1] ?? image.key,
-                  url: image.url,
-                }));
-                return formattedImages ?? null;
-              })
-              .then((images) => {
-                return createProduct.mutate({
-                  ...data,
-                  images,
-                });
-              }),
-            {
-              loading: "Uploading images...",
-              success: "Product added successfully.",
-              error: "Error uploading images.",
-            },
-          );
-        } else {
-          createProduct.mutate({
-            ...data,
-            images: null,
-          });
-        }
-
-        // form.reset();
-        setFiles(null);
-      } catch (err) {
-        catchError(err);
+    try {
+      if (isArrayOfFile(data.images)) {
+        setIsImageUploading(true);
+        toast.promise(
+          startUpload(data.images)
+            .then((res) => {
+              const formattedImages = res?.map((image) => ({
+                id: image.key,
+                name: image.key.split("_")[1] ?? image.key,
+                url: image.url,
+              }));
+              return formattedImages ?? null;
+            })
+            .then((images) => {
+              return createProduct.mutate({
+                ...data,
+                images,
+              });
+            })
+            .finally(() => {
+              setIsImageUploading(false);
+            }),
+          {
+            loading: "Uploading images...",
+            error: "Error uploading images.",
+          },
+        );
+      } else {
+        createProduct.mutate({
+          ...data,
+          images: null,
+        });
       }
-    });
+    } catch (err) {
+      catchError(err);
+    }
   };
   return (
     <Form {...form}>
@@ -240,15 +247,19 @@ const CreateProductForm = () => {
               files={files}
               setFiles={setFiles}
               isUploading={isUploading}
-              disabled={isPending}
+              disabled={createProduct.isLoading || isImageUploading}
             />
           </FormControl>
           <UncontrolledFormMessage
             message={form.formState.errors.images?.message}
           />
         </FormItem>
-        <Button type="submit" className="w-fit" disabled={isPending}>
-          {isPending && (
+        <Button
+          type="submit"
+          className="w-fit"
+          disabled={createProduct.isLoading || isImageUploading}
+        >
+          {(createProduct.isLoading || isImageUploading) && (
             <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />
           )}
           Add Product
